@@ -1,0 +1,82 @@
+/* 🌟 CONTAINER */
+.role-container {
+  text-align: center;
+  margin-top: 80px;
+  color: white;
+}
+
+/* 🏷 TITLE */
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 📝 SUBTITLE */
+.subtitle {
+  color: #ddd;
+  margin-bottom: 40px;
+  font-size: 15px;
+}
+
+/* 📦 CARD WRAPPER */
+.role-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* 🧊 ROLE CARD */
+.role-card {
+  padding: 30px;
+  width: 300px;
+
+  border-radius: 20px;
+
+  cursor: pointer;
+  transition: 0.3s;
+
+  color: white;
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* 🛠 WORK CARD */
+.role-card.work {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+/* 📌 POST CARD */
+.role-card.post {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* ✨ HOVER EFFECT */
+.role-card:hover {
+  transform: translateY(-10px) scale(1.05);
+}
+
+/* 🔥 ACTIVE SELECTION */
+.role-card.active {
+  border: 2px solid #fff;
+  box-shadow: 0 0 20px rgba(255,255,255,0.5);
+}
+
+/* 📋 LIST */
+.role-card ul {
+  text-align: left;
+  margin-top: 15px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .role-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}

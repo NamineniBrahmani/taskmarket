@@ -1,0 +1,86 @@
+/* 📊 DASHBOARD CONTAINER */
+.dashboard-container {
+  width: 85%;
+  margin: 30px auto;
+
+  color: white;
+}
+
+/* 💰 WALLET CARD */
+.wallet {
+  background: linear-gradient(135deg, #10b981, #059669);
+  padding: 18px;
+
+  border-radius: 15px;
+
+  font-size: 18px;
+  font-weight: bold;
+
+  box-shadow: 0 8px 20px rgba(16,185,129,0.4);
+
+  transition: 0.3s;
+}
+
+/* ✨ Wallet hover */
+.wallet:hover {
+  transform: scale(1.02);
+}
+
+/* 📦 STATS CONTAINER */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+
+  margin: 20px 0;
+}
+
+/* 📊 STAT CARD */
+.stat-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+
+  padding: 20px;
+  border-radius: 15px;
+
+  text-align: center;
+  font-weight: bold;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+
+  transition: 0.3s;
+}
+
+/* ✨ Hover effect */
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+/* 🔢 NUMBER STYLE */
+.stat-card h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+/* 🏷 LABEL */
+.stat-card p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* 🎨 COLOR VARIANTS */
+.stat-card.total {
+  border-left: 5px solid #3b82f6;
+}
+
+.stat-card.completed {
+  border-left: 5px solid #22c55e;
+}
+
+.stat-card.progress {
+  border-left: 5px solid #f59e0b;
+}
+
+.stat-card.open {
+  border-left: 5px solid #ef4444;
+}

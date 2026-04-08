@@ -1,0 +1,79 @@
+/* 🌄 FULL SCREEN BACKGROUND */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* 💎 GLASS CARD */
+.auth-card {
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15);
+
+  padding: 35px;
+  width: 350px;
+  border-radius: 20px;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  color: white;
+
+  animation: fadeIn 0.6s ease;
+}
+
+/* ✨ TITLE */
+.auth-card h1 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.auth-card h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+/* 🔥 FIXED INPUTS */
+.auth-card input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+
+  box-sizing: border-box; /* 🔥 VERY IMPORTANT */
+}
+
+/* 🔘 BUTTON */
+.auth-card button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* 🔗 LINK */
+.link {
+  color: #ff7a18;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  margin-top: 10px;
+}
+
+/* ✨ ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

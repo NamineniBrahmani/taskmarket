@@ -1,0 +1,138 @@
+/* 🌟 Navbar Container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(18px);
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 🚀 Logo */
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logo:hover {
+  color: #ff7a18;
+  transform: scale(1.05);
+}
+
+/* 🔗 Nav Links Container */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 🔗 Links */
+.nav-links a {
+  margin: 0 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding: 4px 2px;
+  transition: 0.3s;
+}
+
+/* ✨ Hover underline animation */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: #ff7a18;
+  transition: 0.3s;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  color: #ff7a18;
+}
+
+/* 🔥 ACTIVE LINK */
+.active-link {
+  color: #ff7a18 !important;
+}
+
+.active-link::after {
+  width: 100% !important;
+}
+
+/* 👤 User text */
+.user {
+  margin-left: 10px;
+  color: #ddd;
+  font-size: 14px;
+  background: rgba(255,255,255,0.08);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* 🔘 Common Button */
+.btn {
+  background: linear-gradient(135deg, #ff7a18, #ffb347);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* 🔴 Logout Button */
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .nav-links a {
+    margin: 6px 8px;
+  }
+}

@@ -1,0 +1,76 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+/* 🔥 MODAL BOX */
+.modal-box {
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 320px;
+
+  color: white;
+
+  animation: pop 0.25s ease;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* ✅ SUCCESS */
+.modal-box.success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+/* ❌ ERROR */
+.modal-box.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* ⚠️ WARNING */
+.modal-box.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* ℹ️ INFO */
+.modal-box.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* ✨ ANIMATION */
+@keyframes pop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 🔘 BUTTON INSIDE MODAL */
+.modal-box .btn {
+  margin-top: 15px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+
+.modal-box .btn:hover {
+  opacity: 0.9;
+}
