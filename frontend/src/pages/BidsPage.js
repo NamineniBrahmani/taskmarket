@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -21,12 +21,8 @@ function BidsPage() {
 
   const mode = localStorage.getItem("mode");
 
-  // 🔄 FETCH DATA
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  // ✅ FIXED: useCallback to remove warning
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -35,13 +31,17 @@ function BidsPage() {
 
       setTask(t.data);
       setBids(b.data);
-
     } catch {
       setModal({ msg: "Error loading data", type: "error" });
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId]);
+
+  // 🔄 FETCH DATA
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // 🛠 PLACE BID
   const placeBid = async () => {
@@ -65,7 +65,6 @@ function BidsPage() {
       setDeadline("");
 
       fetchData();
-
     } catch (err) {
       setModal({
         msg: err.response?.data?.msg || "Error placing bid",
@@ -82,7 +81,6 @@ function BidsPage() {
       setModal({ msg: "Task Assigned!", type: "success" });
 
       fetchData();
-
     } catch {
       setModal({ msg: "Error assigning task", type: "error" });
     }
@@ -128,35 +126,36 @@ function BidsPage() {
       {bids.length === 0 && (
         <EmptyState message="No bids yet" />
       )}
+
       {/* ✅ BIDS LIST */}
-{bids.map((b) => (
-  <div key={b._id} className="card">
-    <h3>₹{b.bidAmount}</h3>
+      {bids.map((b) => (
+        <div key={b._id} className="card">
+          <h3>₹{b.bidAmount}</h3>
 
-    <p>
-      <b>User:</b> {b.userId?.name || "Unknown"}
-    </p>
+          <p>
+            <b>User:</b> {b.userId?.name || "Unknown"}
+          </p>
 
-    <p>
-      <b>Deadline:</b>{" "}
-      {new Date(b.deadline).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      })}
-    </p>
+          <p>
+            <b>Deadline:</b>{" "}
+            {new Date(b.deadline).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            })}
+          </p>
 
-    {/* 📌 POSTER ASSIGN */}
-    {isPoster && task?.status === "open" && (
-      <button
-        className="btn"
-        onClick={() => assign(b.userId._id)}
-      >
-        Assign Task
-      </button>
-    )}
-  </div>
-))}
+          {/* 📌 POSTER ASSIGN */}
+          {isPoster && task?.status === "open" && (
+            <button
+              className="btn"
+              onClick={() => assign(b.userId._id)}
+            >
+              Assign Task
+            </button>
+          )}
+        </div>
+      ))}
 
       {/* 🔥 MODAL */}
       {modal && (
