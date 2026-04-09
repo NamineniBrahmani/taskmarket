@@ -60,18 +60,18 @@ exports.sendMessage = async (req, res) => {
 
 
 // 🔵 GET CHAT HISTORY
-exports.getMessagesByTask = async (req, res) => {
+exports.getMessages = async (req, res) => {
   try {
-    const { taskId } = req.params;
-
-    const messages = await Message.find({ task: taskId })
-      .populate("senderId", "name")
+    const messages = await Message.find({
+      taskId: req.params.taskId
+    })
+      .populate("senderId", "name") // 🔥 MUST ADD THIS
       .sort({ createdAt: 1 });
 
     res.json(messages);
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Error fetching messages" });
   }
 };
