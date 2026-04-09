@@ -2,42 +2,30 @@ const mongoose = require("mongoose");
 
 const bidSchema = new mongoose.Schema(
   {
-    task: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
-      required: true
+      required: true,
     },
-
-    bidder: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-
-    amount: {
+    bidAmount: {
       type: Number,
       required: true,
-      min: [1, "Bid amount must be greater than 0"]
     },
-
+    message: String,
     deadline: {
       type: Date,
       required: true,
-      validate: {
-        validator: function (value) {
-          return value > new Date();
-        },
-        message: "Deadline must be in the future"
-      }
     },
-
-    message: {
-      type: String,
-      maxlength: [300, "Message too long"]
-    }
   },
   { timestamps: true }
 );
+
+module.exports = mongoose.model("Bid", bidSchema);
 
 // 🔥 Prevent duplicate bids
 bidSchema.index({ task: 1, bidder: 1 }, { unique: true });
