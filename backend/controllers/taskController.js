@@ -218,27 +218,72 @@ exports.completeTask = async (req, res) => {
 // 💳 RELEASE PAYMENT (FINAL CORRECT)
 exports.releasePayment = async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    const taskId = req.params.id;
 
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
+
+    // 🔒 Only poster can release payment
+    if (task.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ msg: "Not authorized" });
+    }
+
+    // ❌ Must be completed
+    if (task.status !== "completed") {
+      return res.status(400).json({
+        msg: "Task must be completed first"
+      });
+    }
+
+    // ❌ Already paid
+    if (task.paymentStatus === "paid") {
+      return res.status(400).json({
+        msg: "Payment already released"
+      });
+    }
+
+    // 🔥 Get users
     const poster = await User.findById(task.postedBy);
     const worker = await User.findById(task.assignedTo);
 
-    if ((poster.wallet || 0) < task.budget) {
-      return res.status(400).json({ msg: "Insufficient balance" });
+    if (!poster || !worker) {
+      return res.status(400).json({
+        msg: "User not found"
+      });
     }
 
-    poster.wallet -= task.budget;
-    worker.wallet += task.budget;
+    const amount = task.budget;
+
+    // ❌ Check balance
+    if (poster.wallet < amount) {
+      return res.status(400).json({
+        msg: "Insufficient balance"
+      });
+    }
+
+    // 💳 Transfer money
+    poster.wallet -= amount;
+    worker.wallet += amount;
 
     await poster.save();
     await worker.save();
 
+    // ✅ Update task
     task.paymentStatus = "paid";
     await task.save();
 
-    res.json({ msg: "Payment released" });
+    res.json({
+      msg: "Payment released successfully",
+      posterWallet: poster.wallet,
+      workerWallet: worker.wallet
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("PAYMENT ERROR:", err);
+    res.status(500).json({ msg: "Error releasing payment" });
   }
 };
 
