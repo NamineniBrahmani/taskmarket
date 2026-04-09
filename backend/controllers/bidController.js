@@ -2,7 +2,7 @@ const Bid = require("../models/Bid");
 const Task = require("../models/Task");
 
 // 🟢 PLACE BID
-eexports.placeBid = async (req, res) => {
+exports.placeBid = async (req, res) => {
   try {
     const { taskId, bidAmount, message, deadline } = req.body;
 
