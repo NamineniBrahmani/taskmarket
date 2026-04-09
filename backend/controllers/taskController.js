@@ -72,26 +72,45 @@ exports.getTaskById = async (req, res) => {
 exports.assignTask = async (req, res) => {
   try {
     const { userId } = req.body;
+    const taskId = req.params.id;
 
-    const task = await Task.findById(req.params.id);
-    const worker = await User.findById(userId);
+    const task = await Task.findById(taskId);
 
-    if (!task || !worker)
-      return res.status(404).json({ msg: "Task/User not found" });
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
 
-    if (task.postedBy.toString() !== req.user.id)
-      return res.status(403).json({ msg: "Unauthorized" });
+    // ❌ Only poster can assign
+    if (task.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ msg: "Not authorized" });
+    }
 
+    // ❌ Task must be open
+    if (task.status !== "open") {
+      return res.status(400).json({ msg: "Task already assigned" });
+    }
+
+    // 🔥 CHECK BID EXISTS (IMPORTANT FIX)
+    const bid = await Bid.findOne({
+      taskId: taskId,
+      userId: userId
+    });
+
+    if (!bid) {
+      return res.status(400).json({ msg: "No bid found for this user" });
+    }
+
+    // ✅ Assign
     task.assignedTo = userId;
     task.status = "assigned";
 
     await task.save();
 
-    await sendEmail(worker.email, "Task Assigned", `Task: ${task.title}`);
+    res.json({ msg: "Task assigned successfully" });
 
-    res.json({ msg: "Task assigned" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("ASSIGN ERROR:", err);
+    res.status(500).json({ msg: "Error assigning task" });
   }
 };
 
