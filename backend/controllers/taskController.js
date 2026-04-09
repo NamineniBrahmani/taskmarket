@@ -113,10 +113,6 @@ exports.assignTask = async (req, res) => {
     res.status(500).json({ msg: "Error assigning task" });
   }
 };
-
-// 🔐 GENERATE OTP
-const User = require("../models/User"); // 🔥 MUST BE PRESENT
-
 exports.generateOTP = async (req, res) => {
   try {
     const taskId = req.params.id;
