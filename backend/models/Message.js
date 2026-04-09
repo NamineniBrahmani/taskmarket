@@ -2,41 +2,22 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
-    task: {
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
-      required: true,
-      index: true
+      required: true
     },
-
-    sender: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
     },
-
-    content: {
+    message: {
       type: String,
-      required: true,
-      trim: true,
-      maxlength: [500, "Message too long"],
-      validate: {
-        validator: function (val) {
-          return val.trim().length > 0;
-        },
-        message: "Message cannot be empty"
-      }
-    },
-
-    isDeleted: {
-      type: Boolean,
-      default: false
+      required: true
     }
   },
   { timestamps: true }
 );
-
-// Fast chat loading
-messageSchema.index({ task: 1, createdAt: 1 });
 
 module.exports = mongoose.model("Message", messageSchema);
