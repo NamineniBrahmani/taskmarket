@@ -115,22 +115,68 @@ exports.assignTask = async (req, res) => {
 };
 
 // 🔐 GENERATE OTP
+const User = require("../models/User"); // 🔥 MUST BE PRESENT
+
 exports.generateOTP = async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id).populate("assignedTo");
+    const taskId = req.params.id;
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
+
+    // ❌ Only poster can generate OTP
+    if (task.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({ msg: "Not authorized" });
+    }
+
+    // ❌ Task must be assigned
+    if (task.status !== "assigned") {
+      return res.status(400).json({
+        msg: "Task must be assigned first"
+      });
+    }
+
+    // ❌ No worker assigned
+    if (!task.assignedTo) {
+      return res.status(400).json({
+        msg: "No worker assigned"
+      });
+    }
+
+    // 🔥 Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     task.otp = otp;
-    task.otpExpires = Date.now() + 10 * 60 * 1000;
-
     await task.save();
 
-    await sendEmail(task.assignedTo.email, "OTP", `OTP: ${otp}`);
+    // 🔥 Get worker email
+    const worker = await User.findById(task.assignedTo);
 
-    res.json({ msg: "OTP sent" });
+    if (!worker || !worker.email) {
+      return res.status(400).json({
+        msg: "Worker email not found"
+      });
+    }
+
+    // 🔥 Send email
+    const sendEmail = require("../utils/sendEmail");
+
+    await sendEmail(
+      worker.email,
+      "Your Task OTP",
+      `Your OTP is: ${otp}`
+    );
+
+    res.json({ msg: "OTP sent successfully" });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("OTP ERROR:", err);
+    res.status(500).json({
+      msg: err.message || "Error generating OTP"
+    });
   }
 };
 
