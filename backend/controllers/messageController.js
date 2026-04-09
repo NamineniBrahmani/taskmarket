@@ -29,10 +29,9 @@ exports.sendMessage = async (req, res) => {
       return res.status(403).json({ msg: "Not authorized" });
     }
 
-    // ✅ FIXED FIELD NAMES
     const newMessage = new Message({
-      taskId: taskId,
-      senderId: senderId,
+      taskId,
+      senderId,
       message: message.trim()
     });
 
@@ -53,14 +52,6 @@ exports.getMessagesByTask = async (req, res) => {
   try {
     const { taskId } = req.params;
 
-    const messages = await Message.find({ taskId: taskId })
+    const messages = await Message.find({ taskId })
       .populate("senderId", "name")
-      .sort({ createdAt: 1 });
-
-    res.json(messages);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Error fetching messages" });
-  }
-};
+      .sort({ createdAt
