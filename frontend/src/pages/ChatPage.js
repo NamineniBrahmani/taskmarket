@@ -66,17 +66,17 @@ function ChatPage() {
 
       <div className="chat-box">
         {messages.map((m) => (
-          <div
-            key={m._id}
-            className={`message ${
-              m.senderId?._id === user._id ? "own" : ""
-            }`}
-          >
-            <p>
-              <b>{m.senderId?.name}:</b> {m.message}
-            </p>
-          </div>
-        ))}
+  <div
+    key={m._id}
+    className={`message ${
+      m.senderId?._id === user._id ? "own" : ""
+    }`}
+  >
+    <p>
+      <b>{m.senderId?.name || "User"}:</b> {m.message}
+    </p>
+  </div>
+))}
         <div ref={chatEndRef}></div>
       </div>
 

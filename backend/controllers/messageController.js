@@ -65,7 +65,7 @@ exports.getMessagesByTask = async (req, res) => {
     const { taskId } = req.params;
 
     const messages = await Message.find({ task: taskId })
-      .populate("sender", "name")
+      .populate("senderId", "name")
       .sort({ createdAt: 1 });
 
     res.json(messages);
