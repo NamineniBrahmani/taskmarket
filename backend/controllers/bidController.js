@@ -77,9 +77,9 @@ exports.placeBid = async (req, res) => {
 // 🔵 GET BIDS FOR A TASK
 exports.getBidsByTask = async (req, res) => {
   try {
-    const bids = await Bid.find({ task: req.params.taskId })
-      .populate("bidder", "name email")
-      .sort({ amount: 1 });
+    const bids = await Bid.find({ taskId: req.params.taskId })
+      .populate("userId", "name email") // 🔥 FIX
+      .sort({ createdAt: -1 });
 
     res.json(bids);
 
