@@ -2,14 +2,13 @@ const Bid = require("../models/Bid");
 const Task = require("../models/Task");
 
 // 🟢 PLACE BID
-exports.placeBid = async (req, res) => {
+eexports.placeBid = async (req, res) => {
   try {
     const { taskId, bidAmount, message, deadline } = req.body;
 
     console.log("BODY:", req.body);
     console.log("USER:", req.user);
 
-    // 🔒 Auth check
     if (!req.user || !req.user.id) {
       return res.status(401).json({ msg: "Unauthorized" });
     }
@@ -25,7 +24,6 @@ exports.placeBid = async (req, res) => {
       return res.status(400).json({ msg: "Invalid bid amount" });
     }
 
-    // 🔍 Check task
     const task = await Task.findById(taskId);
     if (!task) {
       return res.status(404).json({ msg: "Task not found" });
@@ -41,21 +39,21 @@ exports.placeBid = async (req, res) => {
       return res.status(400).json({ msg: "Bidding is closed for this task" });
     }
 
-    // ❌ Prevent duplicate bid (FIXED FIELD NAMES)
+    // ❌ Prevent duplicate bid (FIXED)
     const existingBid = await Bid.findOne({
-      task: taskId,
-      bidder: userId
+      taskId: taskId,
+      userId: userId
     });
 
     if (existingBid) {
       return res.status(400).json({ msg: "You have already placed a bid" });
     }
 
-    // ✅ Create bid (FIXED FIELD NAMES)
+    // ✅ Create bid (FIXED)
     const bid = new Bid({
-      task: taskId,
-      bidder: userId,
-      amount: Number(bidAmount),
+      taskId: taskId,
+      userId: userId,
+      bidAmount: Number(bidAmount),
       message,
       deadline: new Date(deadline)
     });
@@ -69,10 +67,9 @@ exports.placeBid = async (req, res) => {
 
   } catch (err) {
     console.error("PLACE BID ERROR:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ msg: err.message });
   }
 };
-
 
 // 🔵 GET BIDS FOR A TASK
 exports.getBidsByTask = async (req, res) => {
