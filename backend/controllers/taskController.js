@@ -1,5 +1,6 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
+const Bid = require("../models/Bid");
 const sendEmail = require("../utils/sendEmail");
 
 // 🟢 CREATE TASK
@@ -14,18 +15,19 @@ exports.createTask = async (req, res) => {
     const task = new Task({
       title,
       description,
-      budget: Number(budget),
-      deadline: new Date(deadline),
+      budget,
+      deadline,
       category,
-      postedBy: req.user.id,
-      status: "open"
+      postedBy: req.user.id // 🔥 THIS WAS MISSING
     });
 
     await task.save();
 
-    res.status(201).json({ msg: "Task created", task });
+    res.status(201).json(task);
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("CREATE TASK ERROR:", err);
+    res.status(500).json({ msg: err.message });
   }
 };
 
@@ -73,31 +75,39 @@ exports.assignTask = async (req, res) => {
   try {
     const { userId } = req.body;
     const taskId = req.params.id;
+    console.log("Incoming userId:", userId);   // 🔥 ADD HERE
+    console.log("TaskId:", taskId); 
+    console.log("Assigning:", { taskId, userId });
 
     const task = await Task.findById(taskId);
+    console.log("Incoming userId:", userId);
+    console.log("TASK:", task);
 
     if (!task) {
       return res.status(404).json({ msg: "Task not found" });
     }
 
-    // ❌ Only poster can assign
-    if (task.postedBy.toString() !== req.user.id) {
+    if (!task.postedBy || task.postedBy.toString() !== req.user.id) {
       return res.status(403).json({ msg: "Not authorized" });
     }
 
-    // ❌ Task must be open
     if (task.status !== "open") {
       return res.status(400).json({ msg: "Task already assigned" });
     }
+    const allBids = await Bid.find({ taskId: taskId });
+console.log("ALL BIDS FOR THIS TASK:", allBids);
+    // 🔥 FIX: declare bid BEFORE using it
+    const mongoose = require("mongoose");
 
-    // 🔥 CHECK BID EXISTS (IMPORTANT FIX)
-    const bid = await Bid.findOne({
-      taskId: taskId,
-      userId: userId
-    });
+const bid = await Bid.findOne({
+  taskId: new mongoose.Types.ObjectId(taskId),
+  userId: new mongoose.Types.ObjectId(userId)
+});
+
+    console.log("BID:", bid);
 
     if (!bid) {
-      return res.status(400).json({ msg: "No bid found for this user" });
+      return res.status(400).json({ msg: "No bid found" });
     }
 
     // ✅ Assign
@@ -109,8 +119,8 @@ exports.assignTask = async (req, res) => {
     res.json({ msg: "Task assigned successfully" });
 
   } catch (err) {
-    console.error("ASSIGN ERROR:", err);
-    res.status(500).json({ msg: "Error assigning task" });
+    console.error("ASSIGN ERROR FULL:", err);
+    res.status(500).json({ msg: err.message });
   }
 };
 exports.generateOTP = async (req, res) => {
@@ -302,5 +312,18 @@ exports.getUserTasks = async (req, res) => {
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ msg: "Error fetching user tasks" });
+  }
+};
+exports.getBidsByTask = async (req, res) => {
+  try {
+    const bids = await Bid.find({ task: req.params.taskId })
+      .populate("bidder", "name") // 🔥 THIS IS THE FIX
+      .sort({ createdAt: -1 });
+
+    res.json(bids);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error fetching bids" });
   }
 };

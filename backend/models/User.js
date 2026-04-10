@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
 
     wallet: {
       type: Number,
-      default: 1000,
+      default: 5000,
       min: 0
     },
 

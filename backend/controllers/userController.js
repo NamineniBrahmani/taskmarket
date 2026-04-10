@@ -33,7 +33,7 @@ exports.registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      wallet: 1000
+      wallet: 5000
     });
 
     await user.save();

@@ -148,11 +148,21 @@ function BidsPage() {
           {/* 📌 POSTER ASSIGN */}
           {isPoster && task?.status === "open" && (
             <button
-              className="btn"
-              onClick={() => assign(b.userId._id)}
-            >
-              Assign Task
-            </button>
+  className="btn"
+  onClick={() => {
+    const id =
+      b.userId?._id ||   // object case ✅
+      b.userId ||        // string case ✅
+      b.bidder?._id ||   // fallback
+      b.bidder;
+
+    console.log("Sending userId:", id);
+
+    assign(id);
+  }}
+>
+  Assign Task
+</button>
           )}
         </div>
       ))}
